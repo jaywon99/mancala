@@ -82,9 +82,11 @@ class MancalaPlayer:
         # landing my empty spot, take oppsite position stones, too
         # Rule #08: If the last piece you drop is in an empty hole on your side, you capture that piece and any pieces in the hole directly opposite.
         if last_pos in self.pits and self.board[last_pos] == 1:
+            # another rule
             opposite_position = MancalaBoard.oppsite_position(last_pos)
-            self.board.move(opposite_position, self.home)
-            self.board.move(last_pos, self.home)
+            if self.board[opposite_position] != 0:
+                self.board.move(opposite_position, self.home)
+                self.board.move(last_pos, self.home)
 
         # check stones left on my pits?
         # Rule #10: The game ends when all six spaces on one side of the Mancala board are empty.

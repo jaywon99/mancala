@@ -11,7 +11,7 @@ from mancala import Mancala
 # #5 Transposition Table
 # #6 Alpha Beta Pruning Transposition Table
 
-def negamax(env, player, depth=10):
+def negamax(env, player, alpha=-math.inf, beta=math.inf, depth=10):
     negamax.counter += 1
 
     actions = player.available_actions()
@@ -26,11 +26,11 @@ def negamax(env, player, depth=10):
             score = reward
         else:
             if play_again:
-                score, _ = negamax(env, env.next_player(play_again), depth)
+                score, _ = negamax(env, env.next_player(play_again), alpha, beta, depth)
             elif depth == 1:
                 score = reward
             else:
-                score, _ = negamax(env, env.next_player(play_again), depth-1)
+                score, _ = negamax(env, env.next_player(play_again), -beta, -alpha, depth-1)
                 score = -score # negamax
         env.restore_memento(memento)
 
@@ -39,6 +39,11 @@ def negamax(env, player, depth=10):
         if score > best_score:
             best_score = score
             best_action = action
+
+        if score > alpha:
+            alpha = score
+        if alpha > beta:
+            return (score, alpha)
 
     # print('!', "".join([a[1] for a in env.board.log]), best_score, best_action)
     return (best_score, best_action)
@@ -52,7 +57,7 @@ negamax.counter = 0
 cnt = 0
 while not done:
     player = env.next_player(play_again)    
-    score, action = negamax(env, player, depth=7)
+    score, action = negamax(env, player, depth=4)
     # action = random.choice(player.available_actions())
     state, reward, done, play_again = player.step(action)
     cnt += 1
