@@ -82,9 +82,11 @@ class MancalaPlayer:
         # landing my empty spot, take oppsite position stones, too
         # Rule #08: If the last piece you drop is in an empty hole on your side, you capture that piece and any pieces in the hole directly opposite.
         if last_pos in self.pits and self.board[last_pos] == 1:
+            # another rule
             opposite_position = MancalaBoard.oppsite_position(last_pos)
-            self.board.move(opposite_position, self.home)
-            self.board.move(last_pos, self.home)
+            if self.board[opposite_position] != 0:
+                self.board.move(opposite_position, self.home)
+                self.board.move(last_pos, self.home)
 
         # check stones left on my pits?
         # Rule #10: The game ends when all six spaces on one side of the Mancala board are empty.
@@ -115,6 +117,12 @@ class MancalaPlayer:
 
     def player_id(self):
         return self.home
+
+    def board_hash(self):
+        ALPHADIGIT='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' # 62자리
+        stone_cnts = [self.board[pos] for pos in self.pits]
+        stone_cnts.extend(self.board[pos] for pos in self.opposite_player.pits)
+        return ''.join(ALPHADIGIT[n] for n in stone_cnts) # 각 자리의 최대 숫자는 48 (4*12), base64 비슷하게 처리 (' ', '/'는 불필요)
 
 class MancalaBoard:
     CELL_LIST = ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'RH', 'BH']
