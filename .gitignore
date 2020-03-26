@@ -2,3 +2,4 @@ all_path.txt
 log.txt
 .vscode
 **.sw*
+**/__pycache__/**
