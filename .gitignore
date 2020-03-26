@@ -2,5 +2,5 @@ all_path.txt
 log.txt
 .vscode
 **.sw*
-__pycache__
 *.py[co]
+**/__pycache__/**
