@@ -118,6 +118,12 @@ class MancalaPlayer:
     def player_id(self):
         return self.home
 
+    def board_hash(self):
+        ALPHADIGIT='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' # 62자리
+        stone_cnts = [self.board[pos] for pos in self.pits]
+        stone_cnts.extend(self.board[pos] for pos in self.opposite_player.pits)
+        return ''.join(ALPHADIGIT[n] for n in stone_cnts) # 각 자리의 최대 숫자는 48 (4*12), base64 비슷하게 처리 (' ', '/'는 불필요)
+
 class MancalaBoard:
     CELL_LIST = ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'RH', 'BH']
     RED_HOME = 'RH'
