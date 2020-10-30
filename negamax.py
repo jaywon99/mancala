@@ -20,10 +20,13 @@ def negamax(env, player, depth=10, again=0):
 
     board_hash = player.board_hash()
     cache = tp.get(board_hash)
+
     if cache:
-        if cache['depth'] > depth: # cache가 더 깊이까지 가 봄
+        if cache['depth'] >= depth: # cache가 더 깊이까지 가 봄
             print("CACHE HIT!")
             return cache['score'], cache['actions']
+
+    tp.put_score(board_hash, player.winning_score())
 
     actions = player.available_actions()
     best_score = -math.inf
@@ -36,14 +39,17 @@ def negamax(env, player, depth=10, again=0):
         # print('??', "".join([a[1] for a in env.board.log]), reward, done)
         if done:
             score = reward
+            # 여기에서는 뭘 저장하지?
         else:
+            next_player = env.next_player(play_again)
+            tp.put_next(board_hash, next_player.board_hash(), play_again)
             if play_again:
-                score, _ = negamax(env, env.next_player(play_again), depth, again+1)
+                score, _ = negamax(env, next_player, depth, again+1)
             elif depth == 1:
                 score = reward
                 next_results = None
             else:
-                score, _ = negamax(env, env.next_player(play_again), depth-1, 0)
+                score, _ = negamax(env, next_player, depth-1, 0)
                 score = -score # negamax
         env.restore_memento(memento)
 

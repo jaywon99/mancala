@@ -108,6 +108,11 @@ class MancalaPlayer:
         '''
         return self.board[self.home]
 
+    def winning_score(self):
+        ''' my score - opposite score
+        '''
+        return self.score() - self.opposite_player.score()
+
     def swipe_out(self):
         '''
         Rule #11: The player who still has pieces on his side of the board when the game ends capture all of those pieces.
